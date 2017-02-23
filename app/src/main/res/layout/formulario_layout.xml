@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/etNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nombre"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+    <EditText
+        android:id="@+id/etApellido"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Apellido"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+    <EditText
+        android:id="@+id/etNacionalidad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nacionalidad"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+    <Button
+        android:id="@+id/btnGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="guardar"
+        android:onClick="guardar"/>
+
+</LinearLayout>

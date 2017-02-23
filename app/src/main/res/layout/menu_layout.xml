@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Usuario Bienvenido"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="Selecciona una de las opciones que se muestran a continuacion."
+        android:textSize="10dp"/>
+
+    <Button
+        android:id="@+id/btnDatosPersonales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="datos personales"
+        android:onClick="ingresarDatos"
+        />
+
+    <Button
+        android:id="@+id/btnFotoGrafia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="toma fotografia"
+        android:onClick="abrirCamara"
+        />
+
+</LinearLayout>

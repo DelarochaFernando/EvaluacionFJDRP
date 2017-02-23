@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/home_container"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <com.example.jmata.evaluacionfjdrp.IntroVideoSurfaceView
+        android:id="@+id/surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+        <!--android:layout_gravity="center_horizontal|bottom"-->
+</FrameLayout>
+    <EditText
+        android:id="@+id/focusEdit"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <ImageView
+        android:id="@+id/logo"
+        android:src="@drawable/vine"
+        android:layout_width="250px"
+        android:layout_height="250px"
+        android:focusable="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="75dp"
+        />
+    <!--<TextView
+        android:id="@+id/txt1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Nombre:"
+        android:textColor="#FFFFFF"/>-->
+    <EditText
+        android:id="@+id/edituser"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="35dp"
+        android:layout_centerHorizontal="true"
+        android:padding="12dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAlignment="center"
+        android:textCursorDrawable="@null"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/translucid_textview"
+        android:textColorHighlight="#FFFFFF"
+        android:hint="User"
+        android:textColorHint="#FFFFFF"
+        />
+    <!--<TextView
+        android:id="@+id/txt2"
+        android:layout_below="@+id/editnombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Password:"
+        android:textColor="#FFFFFF"/>-->
+    <EditText
+        android:id="@+id/editPsw"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edituser"
+        android:padding="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAlignment="center"
+        android:background="@drawable/translucid_textview"
+        android:textColor="#FFFFFF"
+        android:textCursorDrawable="@null"
+        android:textColorHighlight="#FFFFFF"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:textColorHint="#FFFFFF"
+        />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Log In"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/clicked_state"
+        android:layout_below="@+id/editPsw"
+        android:id="@+id/btnEntrar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnEntrar"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/txtForgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF"
+                android:text="Forgot your login details? "
+                />
+            <TextView
+                android:id="@+id/txtHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="205dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:text="Get help signing in."/>
+        </RelativeLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/translucid_textview"
+        android:layout_below="@+id/btnEntrar"
+        android:layout_marginTop="150dp"
+        android:orientation="horizontal"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@+id/layout_line"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/txtNoAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="80dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#FFFFFF"
+                android:text="Don't have an account? "
+                />
+            <TextView
+                android:id="@+id/txtSignUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="235dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_centerVertical="true"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:text="Sign Up."/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
