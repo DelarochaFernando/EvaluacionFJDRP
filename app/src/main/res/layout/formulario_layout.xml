@@ -1,32 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <android.support.design.widget.AppBarLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:titleTextColor="#FFFFFF"
+        android:elevation="4dp"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:background="@color/colorPrimaryDark"
+        />
+
+</android.support.design.widget.AppBarLayout>
 
     <EditText
-        android:id="@+id/etNombre"
-        android:layout_width="match_parent"
+        android:id="@+id/focusEdit"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#66FFFFFF"/>
+    <TextView
+        android:id="@+id/txtForgot"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:focusable="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FFFFFF"
+        android:text="Change picture "/>
+
+    <EditText
+        android:id="@+id/editNombre"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAlignment="center"
+        android:textCursorDrawable="@null"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/translucid_textview"
+        android:textColorHighlight="#FFFFFF"
         android:hint="Nombre"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:textColorHint="#FFFFFF"
+        />
     <EditText
-        android:id="@+id/etApellido"
-        android:layout_width="match_parent"
+        android:id="@+id/editApellido"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="Apellido"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAlignment="center"
+        android:textCursorDrawable="@null"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/translucid_textview"
+        android:textColorHighlight="#FFFFFF"
+        android:hint="Apellidos"
+        android:textColorHint="#FFFFFF"/>
     <EditText
-        android:id="@+id/etNacionalidad"
-        android:layout_width="match_parent"
+        android:id="@+id/editNacionalidad"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="12dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textAlignment="center"
+        android:textCursorDrawable="@null"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/translucid_textview"
+        android:textColorHighlight="#FFFFFF"
         android:hint="Nacionalidad"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:textColorHint="#FFFFFF"/>
 
     <Button
-        android:id="@+id/btnGuardar"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="guardar"
-        android:onClick="guardar"/>
-
+        android:padding="10dp"
+        android:text="Guardar"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/clicked_state"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btnGuardar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"/>
 </LinearLayout>
