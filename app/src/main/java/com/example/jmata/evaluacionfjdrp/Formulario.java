@@ -4,6 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +24,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.w3c.dom.Text;
+
+import java.io.File;
+import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,19 +47,24 @@ public class Formulario extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txtPicture;
     private CircleImageView profile_image;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulario_layout);
 
-        etNombre = (EditText)findViewById(R.id.editNombre);
-        etApellido = (EditText)findViewById(R.id.editApellido);
-        etNacionalidad = (EditText)findViewById(R.id.editNacionalidad);
-        btnGuardar = (Button)findViewById(R.id.btnGuardar);
-        txtPicture = (TextView)findViewById(R.id.txtPicture);
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        profile_image = (CircleImageView)findViewById(R.id.profile_image);
+        etNombre = (EditText) findViewById(R.id.editNombre);
+        etApellido = (EditText) findViewById(R.id.editApellido);
+        etNacionalidad = (EditText) findViewById(R.id.editNacionalidad);
+        btnGuardar = (Button) findViewById(R.id.btnGuardar);
+        txtPicture = (TextView) findViewById(R.id.txtPicture);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        profile_image = (CircleImageView) findViewById(R.id.profile_image);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sign up");
@@ -65,14 +80,16 @@ public class Formulario extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String userTyped = etNombre.getText().toString();
-                if(hasFocus){
+                if (hasFocus) {
                     etNombre.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                     etNombre.setHint("");
-                }else{
-                    if(userTyped.length() == 0||userTyped.equals("")){
+                } else {
+                    if (userTyped.length() == 0 || userTyped.equals("")) {
                         etNombre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         etNombre.setHint("Nombre");
-                    }else{etNombre.setText(userTyped);}
+                    } else {
+                        etNombre.setText(userTyped);
+                    }
                 }
             }
         });
@@ -81,14 +98,16 @@ public class Formulario extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String userTyped = etApellido.getText().toString();
-                if(hasFocus){
+                if (hasFocus) {
                     etApellido.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                     etApellido.setHint("");
-                }else{
-                    if(userTyped.length() == 0||userTyped.equals("")){
+                } else {
+                    if (userTyped.length() == 0 || userTyped.equals("")) {
                         etApellido.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         etApellido.setHint("Apellido");
-                    }else{etApellido.setText(userTyped);}
+                    } else {
+                        etApellido.setText(userTyped);
+                    }
                 }
             }
         });
@@ -97,14 +116,16 @@ public class Formulario extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 String userTyped = etNacionalidad.getText().toString();
-                if(hasFocus){
+                if (hasFocus) {
                     etNacionalidad.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
                     etNacionalidad.setHint("");
-                }else{
-                    if(userTyped.length() == 0||userTyped.equals("")){
+                } else {
+                    if (userTyped.length() == 0 || userTyped.equals("")) {
                         etNacionalidad.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                         etNacionalidad.setHint("Nacionalidad");
-                    }else{etNacionalidad.setText(userTyped);}
+                    } else {
+                        etNacionalidad.setText(userTyped);
+                    }
                 }
             }
         });
@@ -116,11 +137,15 @@ public class Formulario extends AppCompatActivity {
             }
         });
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     int REQUEST_IMAGE_CAPTURE = 0;
     int CHOOSE_PIC_CODE = 0;
-    private void takePictureIntent(){
+
+    private void takePictureIntent() {
 
         AlertDialog.Builder dialogProfPic = new AlertDialog.Builder(this);
         dialogProfPic.setTitle("Picture");
@@ -130,16 +155,16 @@ public class Formulario extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 //intent.setType("image/*");
                 CHOOSE_PIC_CODE = 2;
-                startActivityForResult(intent,CHOOSE_PIC_CODE);
+                startActivityForResult(intent, CHOOSE_PIC_CODE);
             }
         });
         dialogProfPic.setNegativeButton("From Camera", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if(intent.resolveActivity(getPackageManager())!=null){
+                if (intent.resolveActivity(getPackageManager()) != null) {
                     REQUEST_IMAGE_CAPTURE = 1;
-                    startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
             }
         });
@@ -150,23 +175,45 @@ public class Formulario extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            Bitmap bp = (Bitmap)extras.get("data");
+            Bitmap bp = (Bitmap) extras.get("data");
             profile_image.setImageBitmap(bp);
         }
-        if(requestCode == CHOOSE_PIC_CODE && resultCode == RESULT_OK){
+
+        if (requestCode == CHOOSE_PIC_CODE && resultCode == RESULT_OK) {
             Uri imgUri = data.getData();
-            profile_image.setImageURI(imgUri);
+            try {
+                String path = imgUri.getPath();
+                Bitmap btmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imgUri);
+                File imgFile = new File(path);
+                ExifInterface exif = new ExifInterface(imgFile.getAbsolutePath());
+                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                Bitmap btrotated = null;
+                Matrix mx = new Matrix();
+
+                if(btmap.getWidth()>btmap.getHeight()){
+                    mx.postRotate(270);
+                    btrotated = Bitmap.createBitmap(btmap,0,0,btmap.getWidth(),btmap.getHeight(),mx, true);
+                    profile_image.setImageBitmap(btrotated);
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //profile_image.setImageURI(imgUri);
+            //profile_image.
         }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
-                Intent intent  = new Intent(Formulario.this,myLogin.class);
+                Intent intent = new Intent(Formulario.this, myLogin.class);
                 startActivity(intent);
                 return true;
             default:
@@ -180,9 +227,49 @@ public class Formulario extends AppCompatActivity {
 
     }
 
-    public void guardar(View v){
+    public void guardar(View v) {
 
         Toast.makeText(Formulario.this, "Has guardado con exito", Toast.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Formulario Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.jmata.evaluacionfjdrp/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Formulario Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.jmata.evaluacionfjdrp/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
