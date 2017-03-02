@@ -1,19 +1,24 @@
 package com.example.jmata.evaluacionfjdrp;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,6 +52,8 @@ public class Formulario extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txtPicture;
     private CircleImageView profile_image;
+    private Dialog dialog = null;
+    private int rotar = 0;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -176,37 +183,95 @@ public class Formulario extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap bp = (Bitmap) extras.get("data");
-            profile_image.setImageBitmap(bp);
+            try {
+                //dialog = ProgressDialog.show(Formulario.this, "Fotografia", "Procesando...", true, false);
+                Bundle extras = data.getExtras();
+                Bitmap bp = (Bitmap) extras.get("data");
+                profile_image.setImageBitmap(bp);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }
 
         if (requestCode == CHOOSE_PIC_CODE && resultCode == RESULT_OK) {
             Uri imgUri = data.getData();
             try {
-                String path = imgUri.getPath();
-                Bitmap btmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imgUri);
-                File imgFile = new File(path);
-                ExifInterface exif = new ExifInterface(imgFile.getAbsolutePath());
-                int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                Bitmap btrotated = null;
-                Matrix mx = new Matrix();
 
-                if(btmap.getWidth()>btmap.getHeight()){
-                    mx.postRotate(270);
-                    btrotated = Bitmap.createBitmap(btmap,0,0,btmap.getWidth(),btmap.getHeight(),mx, true);
-                    profile_image.setImageBitmap(btrotated);
-                }
-
-
-            } catch (IOException e) {
+                Bitmap btrotated = imageFromGallery(imgUri);
+                profile_image.setImageBitmap(btrotated);
+            }catch (Exception e){
                 e.printStackTrace();
             }
-            //profile_image.setImageURI(imgUri);
-            //profile_image.
         }
     }
 
+    private String getOrientation(Uri uri){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        String orientation = "landscape";
+        try{
+            String image = new File(uri.getPath()).getAbsolutePath();
+            BitmapFactory.decodeFile(image, options);
+            int imageHeight = options.outHeight;
+            int imageWidth = options.outWidth;
+            if (imageHeight > imageWidth){
+                orientation = "portrait";
+            }
+        }catch (Exception e){
+            //Do nothing
+        }
+        return orientation;
+    }
+
+    private Bitmap imageFromGallery(Uri uri){
+        boolean landscape = false;
+        boolean portrait = false;
+        try{
+            Bitmap bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            ExifInterface exif = new ExifInterface(uri.getPath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+            /*if(orientation<=0){
+                orientation
+            }*/
+            int angle = 0;
+            switch(orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    angle = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    angle = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    angle = 90;
+                    break;
+                default:
+                    angle = 0;
+                    break;
+            }
+            if(bm.getWidth()>bm.getHeight()) {
+                landscape = true;
+            }else{
+                portrait = true;
+            }
+            //boolean landscape = bm.getWidth()>bm.getHeight();
+            //boolean portrait = bm.getHeight()>bm.getWidth();
+            Matrix m = new Matrix();
+            if(angle == 0&& landscape){
+                m.postRotate(270);
+            }else if(angle == 0 && portrait) {
+                m.postRotate(angle);
+            }
+
+            return Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),m,true);
+
+        }catch(IOException e){
+            Log.e("", "-- Error in setting image");
+        }catch (OutOfMemoryError oom){
+            Log.e("", "-- OOM Error in setting image");
+        }
+        return null;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
