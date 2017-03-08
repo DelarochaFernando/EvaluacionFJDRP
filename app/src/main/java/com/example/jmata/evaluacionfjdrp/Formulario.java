@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -43,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by jmata on 08/07/2016.
  */
-public class Formulario extends AppCompatActivity {
+public class Formulario extends ActionBarActivity {
 
     private EditText etNombre;
     private EditText etApellido;
@@ -70,10 +71,11 @@ public class Formulario extends AppCompatActivity {
         etNacionalidad = (EditText) findViewById(R.id.editNacionalidad);
         btnGuardar = (Button) findViewById(R.id.btnGuardar);
         txtPicture = (TextView) findViewById(R.id.txtPicture);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
 
-        setSupportActionBar(toolbar);
+
+        //setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Sign up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -134,6 +136,13 @@ public class Formulario extends AppCompatActivity {
                         etNacionalidad.setText(userTyped);
                     }
                 }
+            }
+        });
+
+        profile_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takePictureIntent();
             }
         });
 
@@ -281,6 +290,10 @@ public class Formulario extends AppCompatActivity {
                 Intent intent = new Intent(Formulario.this, myLogin.class);
                 startActivity(intent);
                 return true;
+            case R.id.btnSave:
+                Intent saveintent = new Intent(Formulario.this, myLogin.class);
+                startActivity(saveintent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -288,8 +301,9 @@ public class Formulario extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
-
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        return true;
+        //super.onCreateOptionsMenu(menu);
     }
 
     public void guardar(View v) {
