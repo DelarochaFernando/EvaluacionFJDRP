@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
@@ -46,15 +47,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class Formulario extends ActionBarActivity {
 
-    private EditText etNombre;
-    private EditText etApellido;
-    private EditText etNacionalidad;
+    private EditText editNombre,editUsuario,editEmail,editPsw;
     private Button btnGuardar;
     private Toolbar toolbar;
     private TextView txtPicture;
     private CircleImageView profile_image;
     private Dialog dialog = null;
     private int rotar = 0;
+    private int fotoElegida;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -66,10 +66,11 @@ public class Formulario extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulario_layout);
 
-        etNombre = (EditText) findViewById(R.id.editNombre);
-        etApellido = (EditText) findViewById(R.id.editApellido);
-        etNacionalidad = (EditText) findViewById(R.id.editNacionalidad);
-        btnGuardar = (Button) findViewById(R.id.btnGuardar);
+        editNombre = (EditText) findViewById(R.id.editNombre);
+        editUsuario = (EditText) findViewById(R.id.editUsuario);
+        editEmail = (EditText) findViewById(R.id.editEmail);
+        editPsw = (EditText) findViewById(R.id.editPsw);
+        //btnGuardar = (Button) findViewById(R.id.btnGuardar);
         txtPicture = (TextView) findViewById(R.id.txtPicture);
         //toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
@@ -82,58 +83,77 @@ public class Formulario extends ActionBarActivity {
         Window wd = this.getWindow();
         wd.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         wd.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             wd.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
         }
-        etNombre.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editNombre.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                String userTyped = etNombre.getText().toString();
+                String userTyped = editNombre.getText().toString();
                 if (hasFocus) {
-                    etNombre.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    etNombre.setHint("");
+                    editNombre.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+                    editNombre.setHint("");
                 } else {
                     if (userTyped.length() == 0 || userTyped.equals("")) {
-                        etNombre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        etNombre.setHint("Nombre");
+                        editNombre.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        editNombre.setHint("Nombre");
                     } else {
-                        etNombre.setText(userTyped);
+                        editNombre.setText(userTyped);
                     }
                 }
             }
         });
 
-        etApellido.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editUsuario.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                String userTyped = etApellido.getText().toString();
+                String userTyped = editUsuario.getText().toString();
                 if (hasFocus) {
-                    etApellido.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    etApellido.setHint("");
+                    editUsuario.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+                    editUsuario.setHint("");
                 } else {
                     if (userTyped.length() == 0 || userTyped.equals("")) {
-                        etApellido.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        etApellido.setHint("Apellido");
+                        editUsuario.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        editUsuario.setHint("Usuario");
                     } else {
-                        etApellido.setText(userTyped);
+                        editUsuario.setText(userTyped);
                     }
                 }
             }
         });
 
-        etNacionalidad.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        editEmail.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                String userTyped = etNacionalidad.getText().toString();
+                String userTyped = editEmail.getText().toString();
                 if (hasFocus) {
-                    etNacionalidad.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-                    etNacionalidad.setHint("");
+                    editEmail.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+                    editEmail.setHint("");
                 } else {
                     if (userTyped.length() == 0 || userTyped.equals("")) {
-                        etNacionalidad.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                        etNacionalidad.setHint("Nacionalidad");
+                        editEmail.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        editEmail.setHint("Email");
                     } else {
-                        etNacionalidad.setText(userTyped);
+                        editEmail.setText(userTyped);
+                    }
+                }
+            }
+        });
+
+        editPsw.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                String userTyped = editPsw.getText().toString();
+                if (hasFocus) {
+                    editPsw.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
+                    editPsw.setHint("");
+                } else {
+                    if (userTyped.length() == 0 || userTyped.equals("")) {
+                        editPsw.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                        editPsw.setHint("Password");
+                    } else {
+                        editPsw.setText(userTyped);
                     }
                 }
             }
@@ -194,6 +214,7 @@ public class Formulario extends ActionBarActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
                 //dialog = ProgressDialog.show(Formulario.this, "Fotografia", "Procesando...", true, false);
+                fotoElegida = 1;
                 Bundle extras = data.getExtras();
                 Bitmap bp = (Bitmap) extras.get("data");
                 profile_image.setImageBitmap(bp);
@@ -206,7 +227,7 @@ public class Formulario extends ActionBarActivity {
         if (requestCode == CHOOSE_PIC_CODE && resultCode == RESULT_OK) {
             Uri imgUri = data.getData();
             try {
-
+                    fotoElegida = 2;
                 Bitmap btrotated = imageFromGallery(imgUri);
                 profile_image.setImageBitmap(btrotated);
             }catch (Exception e){
@@ -291,9 +312,10 @@ public class Formulario extends ActionBarActivity {
                 startActivity(intent);
                 return true;
             case R.id.btnSave:
-                Intent saveintent = new Intent(Formulario.this, myLogin.class);
-                startActivity(saveintent);
-                return true;
+
+                //Intent saveintent = new Intent(Formulario.this, myLogin.class);
+                //startActivity(saveintent);
+                return checkInfo();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -306,10 +328,40 @@ public class Formulario extends ActionBarActivity {
         //super.onCreateOptionsMenu(menu);
     }
 
-    public void guardar(View v) {
+    public boolean checkInfo() {
+        Drawable errorIcon = getResources().getDrawable(R.drawable.error);
+        Drawable warningIcon = getResources().getDrawable(R.drawable.warning);
 
-        Toast.makeText(Formulario.this, "Has guardado con exito", Toast.LENGTH_SHORT).show();
+        if(editNombre.length()==0){
+            editNombre.setError("Ingrese nombre");
+            return false;
+        }
 
+        if(editUsuario.length()==0){
+            editUsuario.setError("Ingrese usuario");
+            return false;
+        }
+
+        if(editEmail.length() == 0){
+            editEmail.setError("Ingrese email");
+            return false;
+        }
+
+        if(editPsw.length()==0){
+            editPsw.setError("Ingrese el password");
+            return false;
+        }
+
+        if(editPsw.length()<8){
+            editPsw.setError("El password debe ser una longitud de 8 caracteres mínimo");
+            return false;
+        }
+
+        if(fotoElegida == 0){
+            txtPicture.setError("Se recomienda incluir una fotografía");
+            return false;
+        }
+        return true;
     }
 
     @Override
