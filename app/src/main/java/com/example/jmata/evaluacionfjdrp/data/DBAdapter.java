@@ -84,11 +84,12 @@ public class DBAdapter {
     (
             String nombre,
             String usuario,
-            String imgStrng,
+            String imgString,
             String email,
             String password)
     {
         int count = 0;
+        long res = 0;
         Cursor c = null;
 
         try{
@@ -97,23 +98,23 @@ public class DBAdapter {
             if(count>0){
                 if(c.moveToFirst()){
                     ContentValues val = new ContentValues();
-                    val.put("nom", nombre);
-                    val.put("usu", usuario);
-                    val.put("img", imgStrng);
+                    val.put("nombre", nombre);
+                    val.put("usuario", usuario);
+                    val.put("imgString", imgString);
                     val.put("email", email);
-                    val.put("psw", password);
+                    val.put("password", password);
                     Log.d("Update Usuario","Guardar");
-                    return db.update(TABLE_USUARIOS,val," usuario ='"+usuario+"' ",null);
+                    res = db.update(TABLE_USUARIOS,val," usuario ='"+usuario+"' ",null);
                 }
             }else {
                 ContentValues val = new ContentValues();
-                val.put("nom", nombre);
-                val.put("usu", usuario);
-                val.put("img", imgStrng);
+                val.put("nombre", nombre);
+                val.put("usuario", usuario);
+                val.put("imgString", imgString);
                 val.put("email", email);
-                val.put("psw", password);
+                val.put("password", password);
                 Log.d("Insert Usuario","Guardar");
-                return db.insert(TABLE_USUARIOS,null,val);
+                res = db.insert(TABLE_USUARIOS,null,val);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -121,6 +122,33 @@ public class DBAdapter {
         }finally {
             c.close();
         }
-        return 0;
+        return res;
+    }
+
+    public String validarAcceso(String usuario){
+
+        String psw = new String();
+        try{
+        Cursor c = null;
+        int count = 0;
+        openToRead();
+
+            c = db.rawQuery("SELECT password FROM "+TABLE_USUARIOS+" WHERE usuario ='"+usuario+"' ",null);
+            if(c!=null){
+                count = c.getCount();
+                if(count>0){
+                    psw = c.getString(0);
+                    return psw;
+                }else{
+                    psw = "";
+                    return psw;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+        return psw;
+
     }
 }

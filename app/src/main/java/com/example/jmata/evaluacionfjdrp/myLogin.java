@@ -3,6 +3,7 @@ package com.example.jmata.evaluacionfjdrp;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,6 +24,8 @@ import android.widget.TextView;
 
 //import com.facebook.FacebookSdk;
 
+import com.example.jmata.evaluacionfjdrp.data.DBAdapter;
+
 import java.io.IOException;
 
 /**
@@ -30,15 +33,18 @@ import java.io.IOException;
  */
 public class myLogin extends AppCompatActivity {
 
+
+    private Button btnEntrar;
+    private DBAdapter db;
     private EditText edituser;
     private EditText editPsw;
-    private Button btnEntrar;
-    private TextView txtSignUp;
-    private MediaPlayer mp = null;
+    FrameLayout home_container;
     IntroVideoSurfaceView msurfaceView = null;
     private ImageView logo;
+    private MediaPlayer mp = null;
+    private String usuario, contraseña;
+    private TextView txtSignUp;
 
-    FrameLayout home_container;
 
 
 
@@ -48,16 +54,18 @@ public class myLogin extends AppCompatActivity {
         //FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.mylogin);
         try{
-        btnEntrar = (Button)findViewById(R.id.btnEntrar);
-        edituser = (EditText)findViewById(R.id.edituser);
-        editPsw = (EditText)findViewById(R.id.editPsw);
-        logo = (ImageView)findViewById(R.id.logo);
-        txtSignUp = (TextView)findViewById(R.id.txtSignUp);
-        //btnEntrar.getBackground().setAlpha(128);
-        home_container = (FrameLayout)findViewById(R.id.home_container);
-        msurfaceView = (IntroVideoSurfaceView)findViewById(R.id.surface);
-        SurfaceHolder mholder = msurfaceView.getHolder();
-        mholder.addCallback(msurfaceView);
+            db = new DBAdapter(myLogin.this);
+            btnEntrar = (Button)findViewById(R.id.btnEntrar);
+            edituser = (EditText)findViewById(R.id.edituser);
+            editPsw = (EditText)findViewById(R.id.editPsw);
+            logo = (ImageView)findViewById(R.id.logo);
+            txtSignUp = (TextView)findViewById(R.id.txtSignUp);
+            //btnEntrar.getBackground().setAlpha(128);
+            home_container = (FrameLayout)findViewById(R.id.home_container);
+            msurfaceView = (IntroVideoSurfaceView)findViewById(R.id.surface);
+            SurfaceHolder mholder = msurfaceView.getHolder();
+            mholder.addCallback(msurfaceView);
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -67,6 +75,7 @@ public class myLogin extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                validaCredenciales();
                 Intent intent = new Intent(myLogin.this,menuPrincipal.class);
                 startActivity(intent);
             }
@@ -134,6 +143,20 @@ public class myLogin extends AppCompatActivity {
         btnEntrar = (Button) findViewById(R.id.btnEntrar);
 
         //setContentView(R.layout.mylogin);*/
+
+
+    }
+
+    public void validaCredenciales() {
+
+        try{
+
+            usuario = edituser.getText().toString();
+            contraseña = editPsw.getText().toString();
+            
+        }catch (Exception e){
+
+        }
 
 
     }

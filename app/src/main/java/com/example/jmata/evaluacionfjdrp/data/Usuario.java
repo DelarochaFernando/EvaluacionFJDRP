@@ -59,7 +59,7 @@ public class Usuario {
 
     }
 
-    public Usuario(String nombre, String usuario, String email, String password){
+    public Usuario(String nombre, String usuario, String imgString, String email, String password){
 
         this.nombre = nombre;
         this.usuario = usuario;

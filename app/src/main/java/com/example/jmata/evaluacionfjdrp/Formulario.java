@@ -17,9 +17,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+//import org.kobjects.base64.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,12 +35,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jmata.evaluacionfjdrp.data.DBAdapter;
+import com.example.jmata.evaluacionfjdrp.data.Usuario;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -47,12 +54,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class Formulario extends ActionBarActivity {
 
-    private EditText editNombre,editUsuario,editEmail,editPsw;
+
     private Button btnGuardar;
+    private Bitmap bmToSave;
+    private boolean info;
+    private CircleImageView profile_image;
+    private CoordinatorLayout coordinatorLayout;
+    private DBAdapter db;
+    private Dialog dialog = null;
+    private EditText editNombre,editUsuario,editEmail,editPsw;
+    private String mensaje;
     private Toolbar toolbar;
     private TextView txtPicture;
-    private CircleImageView profile_image;
-    private Dialog dialog = null;
+    private Usuario nuevoUsuario;
+
     private int rotar = 0;
     private int fotoElegida;
     /**
@@ -66,11 +81,13 @@ public class Formulario extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.formulario_layout);
 
+        db = new DBAdapter(Formulario.this);
+        coordinatorLayout = (CoordinatorLayout)findViewById(R.id.coordinatorLayout);
         editNombre = (EditText) findViewById(R.id.editNombre);
         editUsuario = (EditText) findViewById(R.id.editUsuario);
         editEmail = (EditText) findViewById(R.id.editEmail);
         editPsw = (EditText) findViewById(R.id.editPsw);
-        //btnGuardar = (Button) findViewById(R.id.btnGuardar);
+        //btnSnack = (Button) findViewById(R.id.btnGuardar);
         txtPicture = (TextView) findViewById(R.id.txtPicture);
         //toolbar = (Toolbar) findViewById(R.id.toolbar);
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
@@ -211,13 +228,15 @@ public class Formulario extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Bitmap bm = null;
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
                 //dialog = ProgressDialog.show(Formulario.this, "Fotografia", "Procesando...", true, false);
                 fotoElegida = 1;
                 Bundle extras = data.getExtras();
-                Bitmap bp = (Bitmap) extras.get("data");
-                profile_image.setImageBitmap(bp);
+                bm = (Bitmap) extras.get("data");
+                bmToSave = bm;
+                profile_image.setImageBitmap(bm);
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -228,8 +247,9 @@ public class Formulario extends ActionBarActivity {
             Uri imgUri = data.getData();
             try {
                     fotoElegida = 2;
-                Bitmap btrotated = imageFromGallery(imgUri);
-                profile_image.setImageBitmap(btrotated);
+                 bm = imageFromGallery(imgUri);
+                bmToSave = bm;
+                profile_image.setImageBitmap(bm);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -306,16 +326,29 @@ public class Formulario extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //
+        info = false;
         switch (item.getItemId()) {
             case android.R.id.home:
                 Intent intent = new Intent(Formulario.this, myLogin.class);
                 startActivity(intent);
                 return true;
             case R.id.btnSave:
-
-                //Intent saveintent = new Intent(Formulario.this, myLogin.class);
-                //startActivity(saveintent);
-                return checkInfo();
+                info = checkInfo();
+                Snackbar snackbar = Snackbar.make(coordinatorLayout,mensaje,Snackbar.LENGTH_LONG)
+                        .setAction("ACEPTAR", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mensaje.contains("Error")){
+                            return;
+                        }else{
+                            Intent intent = new Intent(Formulario.this,myLogin.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+                snackbar.show();
+                //Toast.makeText(Formulario.this, mensaje, Toast.LENGTH_SHORT).show();
+                return info;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -329,8 +362,8 @@ public class Formulario extends ActionBarActivity {
     }
 
     public boolean checkInfo() {
-        Drawable errorIcon = getResources().getDrawable(R.drawable.error);
-        Drawable warningIcon = getResources().getDrawable(R.drawable.warning);
+        //Drawable errorIcon = getResources().getDrawable(R.drawable.error);
+        //Drawable warningIcon = getResources().getDrawable(R.drawable.warning);
 
         if(editNombre.length()==0){
             editNombre.setError("Ingrese nombre");
@@ -361,7 +394,55 @@ public class Formulario extends ActionBarActivity {
             txtPicture.setError("Se recomienda incluir una fotografía");
             return false;
         }
-        return true;
+
+        String nombre = editNombre.getText().toString();
+        String usuario = editUsuario.getText().toString();
+        String email = editEmail.getText().toString();
+        String password = editPsw.getText().toString();
+
+
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmToSave.compress(Bitmap.CompressFormat.JPEG,80,stream);
+            byte[] data_image = stream.toByteArray();
+            String img_str = Base64.encodeToString(data_image, Base64.DEFAULT);
+
+
+        nuevoUsuario = new Usuario(nombre,usuario, img_str,email,password);
+        boolean result = updateUsuario();
+        if(data_image!=null){
+            data_image = null;
+        }
+
+        return result;
+    }
+
+    public boolean updateUsuario(){
+
+        try{
+            String name = nuevoUsuario.getNombre();
+            String user = nuevoUsuario.getUsuario();
+            String imgString = nuevoUsuario.getImgString();
+            String mail = nuevoUsuario.getEmail();
+            String pssword = nuevoUsuario.getPassword();
+
+            db.open();
+
+            long id = 1;
+            id = db.save_update_usuarios(name, user, imgString, mail, pssword);
+
+            db.closeDB();
+
+            if(id ==-1){
+                mensaje = "Error, no pudo guardarse el usuario.";
+                return false;
+            }else{
+                mensaje = "Usuario guardado exitosamente.";
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
