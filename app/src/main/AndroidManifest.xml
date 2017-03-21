@@ -5,8 +5,14 @@
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-feature android:name="android.hardware.Camera" android:required="false"/>
+
+    <uses-feature
+        android:name="android.hardware.Camera"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -41,15 +47,24 @@
         </activity>
         <activity
             android:name=".menuPrincipal"
-            android:label="menuprincipal" />
+            android:label="menuprincipal"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".Formulario"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ProfilePic"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".ProfilePic" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".tabbedActivity"
+            android:label="@string/title_activity_tabbed"
+            android:theme="@style/NoActionBar"></activity>
     </application>
 
 </manifest>

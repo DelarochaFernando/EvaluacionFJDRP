@@ -137,13 +137,16 @@ public class DBAdapter {
             if(c!=null){
                 count = c.getCount();
                 if(count>0){
-                    psw = c.getString(0);
-                    return psw;
+                    if(c.moveToFirst()){
+                        psw = c.getString(0);
+                    }
+
                 }else{
                     psw = "";
                     return psw;
                 }
             }
+
         }catch (Exception e){
             e.printStackTrace();
             return "";

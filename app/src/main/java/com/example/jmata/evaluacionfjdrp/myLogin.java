@@ -1,6 +1,9 @@
 package com.example.jmata.evaluacionfjdrp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -42,7 +45,7 @@ public class myLogin extends AppCompatActivity {
     IntroVideoSurfaceView msurfaceView = null;
     private ImageView logo;
     private MediaPlayer mp = null;
-    private String usuario, contraseña;
+    private String usuario, contraseña, mensaje;
     private TextView txtSignUp;
 
 
@@ -75,9 +78,10 @@ public class myLogin extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                validaCredenciales();
-                Intent intent = new Intent(myLogin.this,menuPrincipal.class);
+                //validaCredenciales();
+                Intent intent = new Intent(myLogin.this, menuPrincipal.class);
                 startActivity(intent);
+
             }
         });
 
@@ -147,15 +151,66 @@ public class myLogin extends AppCompatActivity {
 
     }
 
-    public void validaCredenciales() {
+    public boolean validaCredenciales() {
 
-        try{
+        try {
 
             usuario = edituser.getText().toString();
             contraseña = editPsw.getText().toString();
-            
-        }catch (Exception e){
 
+            if (usuario.length() == 0) {
+                edituser.setError("Ingrese el Usuario.");
+                return false;
+            }
+
+            if (contraseña.length() == 0) {
+                editPsw.setError("Ingrese el password");
+                return false;
+            }
+
+            String respuestaPsw = db.validarAcceso(usuario);
+            if (respuestaPsw.equals(contraseña)) {
+
+                mensaje = "Acceso permitido, Bienvenido: " + usuario;
+                AlertDialog dialog = new AlertDialog.Builder(myLogin.this)
+                .setTitle("Login").setMessage(mensaje).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    Intent intent = new Intent(myLogin.this,menuPrincipal.class);
+                    startActivity(intent);
+                }
+                }).create();
+                dialog.show();
+                return true;
+
+
+            }else {
+
+                mensaje ="No es el password valido, ingrese el correcto.";
+                AlertDialog dialog = new AlertDialog.Builder(myLogin.this)
+                        .setTitle("Login").setMessage(mensaje).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create();
+                dialog.show();
+                return false;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            mensaje = "Error de Acceso, vuelva a intentar.";
+            AlertDialog dialog = new AlertDialog.Builder(myLogin.this)
+                    .setTitle("Login").setMessage(mensaje).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+            dialog.show();
+            return false;
         }
 
 

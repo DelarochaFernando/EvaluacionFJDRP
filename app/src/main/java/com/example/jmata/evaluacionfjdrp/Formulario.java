@@ -45,6 +45,7 @@ import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -279,6 +280,10 @@ public class Formulario extends ActionBarActivity {
         boolean portrait = false;
         try{
             Bitmap bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            byte[] byteArray = stream.toByteArray();
+            FileInputStream inputStream = new FileInputStream(uri.getPath());
             ExifInterface exif = new ExifInterface(uri.getPath());
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
             /*if(orientation<=0){
