@@ -1,8 +1,11 @@
 package com.example.jmata.evaluacionfjdrp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -13,9 +16,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,9 +30,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 
 import com.example.jmata.evaluacionfjdrp.adapter.TabsPagerAdapter;
+import com.example.jmata.evaluacionfjdrp.data.DBAdapter;
+import com.example.jmata.evaluacionfjdrp.data.Usuario;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,13 +43,19 @@ import com.google.android.gms.common.api.GoogleApiClient;
 /**
  * Created by jmata on 08/07/2016.
  */
-public class menuPrincipal extends AppCompatActivity{
+public class menuPrincipal extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     //android.app.ActionBar.TabListener
 
-    private ViewPager vp;
-    private TabsPagerAdapter tabsAdapter;
+
     private android.app.ActionBar ab;
+    private DBAdapter db;
+    private TabsPagerAdapter tabsAdapter;
+    private Usuario usuario;
+    private ViewPager vp;
+    private TextView lblDrawerName, lblDrawerUser;
+    private Tools tools;
+
     // Tab titles
     String[] tabTitles = {"Tab1", "Tab2", "Tab3"};
 
@@ -50,12 +65,31 @@ public class menuPrincipal extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_layout);
 
-
+        db = new DBAdapter(this);
+        tools = new Tools(this);
+        DrawerLayout dwl = (DrawerLayout)findViewById(R.id.drawer_layout);
         CoordinatorLayout mCoordinator = (CoordinatorLayout)findViewById(R.id.coordMenuPrincipal);
-        //Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Menu");
+        Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Home");
+        getSupportActionBar().setElevation(0);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, dwl, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        dwl.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+        lblDrawerName = (TextView) header.findViewById(R.id.lblDrawerName);
+        lblDrawerUser = (TextView) header.findViewById(R.id.lblDrawerUser);
+
+        lblDrawerName.setText("Fernando De la Rocha");
+        lblDrawerUser.setText(tools.getStringPreferences("user"));
+
 
         Window wd = this.getWindow();
         wd.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -112,6 +146,45 @@ public class menuPrincipal extends AppCompatActivity{
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        switch(item.getItemId()){
+            case R.id.nav_cerrar_sesion:
+                String mensaje = tools.getStringPreferences("user")+" "+"Deseas cerrar la sesión?";
+                AlertDialog dialog = new AlertDialog.Builder(menuPrincipal.this)
+                        .setTitle("Cerrar sesión").setMessage(mensaje)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Intent cerrarSesion = new Intent(menuPrincipal.this, myLogin.class);
+                                startActivity(cerrarSesion);
+                            }
+                        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create();
+                dialog.show();
+                default:
+                    return false;
+        }
+
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            return false;
+        }else{
+            return true;
+        }
+        //return super.onKeyDown(keyCode, event);
     }
 
     /*public class TabsPagerAdapter extends FragmentPagerAdapter{

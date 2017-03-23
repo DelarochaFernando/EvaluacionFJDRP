@@ -48,7 +48,8 @@
         <activity
             android:name=".menuPrincipal"
             android:label="menuprincipal"
-            android:theme="@style/AppTheme"/>
+            android:noHistory="true"
+            android:theme="@style/AppThemeTabs"/>
         <activity
             android:name=".Formulario"
             android:theme="@style/AppTheme" />

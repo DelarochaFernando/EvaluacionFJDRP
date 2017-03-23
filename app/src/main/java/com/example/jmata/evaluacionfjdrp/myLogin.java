@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -47,6 +48,7 @@ public class myLogin extends AppCompatActivity {
     private MediaPlayer mp = null;
     private String usuario, contraseña, mensaje;
     private TextView txtSignUp;
+    private Tools tools;
 
 
 
@@ -63,6 +65,7 @@ public class myLogin extends AppCompatActivity {
             editPsw = (EditText)findViewById(R.id.editPsw);
             logo = (ImageView)findViewById(R.id.logo);
             txtSignUp = (TextView)findViewById(R.id.txtSignUp);
+            tools = new Tools(this);
             //btnEntrar.getBackground().setAlpha(128);
             home_container = (FrameLayout)findViewById(R.id.home_container);
             msurfaceView = (IntroVideoSurfaceView)findViewById(R.id.surface);
@@ -78,9 +81,9 @@ public class myLogin extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                //validaCredenciales();
-                Intent intent = new Intent(myLogin.this, menuPrincipal.class);
-                startActivity(intent);
+                validaCredenciales();
+                //Intent intent = new Intent(myLogin.this, menuPrincipal.class);
+                //startActivity(intent);
 
             }
         });
@@ -154,10 +157,8 @@ public class myLogin extends AppCompatActivity {
     public boolean validaCredenciales() {
 
         try {
-
             usuario = edituser.getText().toString();
             contraseña = editPsw.getText().toString();
-
             if (usuario.length() == 0) {
                 edituser.setError("Ingrese el Usuario.");
                 return false;
@@ -170,6 +171,9 @@ public class myLogin extends AppCompatActivity {
 
             String respuestaPsw = db.validarAcceso(usuario);
             if (respuestaPsw.equals(contraseña)) {
+
+                tools.setStringPreferences("user", usuario);
+                tools.setStringPreferences("contraseña", contraseña);
 
                 mensaje = "Acceso permitido, Bienvenido: " + usuario;
                 AlertDialog dialog = new AlertDialog.Builder(myLogin.this)
@@ -253,6 +257,17 @@ public class myLogin extends AppCompatActivity {
     public void surfaceDestroyed(SurfaceHolder holder) {
 
     }*/
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            myLogin.this.finishAffinity();
+            System.exit(0);
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     @Override
     protected void onRestart() {
