@@ -2,6 +2,8 @@ package com.example.jmata.evaluacionfjdrp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,6 +23,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +33,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.support.v7.widget.Toolbar;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -50,11 +54,14 @@ public class menuPrincipal extends AppCompatActivity implements NavigationView.O
 
     private android.app.ActionBar ab;
     private DBAdapter db;
+    private ImageView imageUser;
+    private String img_str;
     private TabsPagerAdapter tabsAdapter;
-    private Usuario usuario;
-    private ViewPager vp;
     private TextView lblDrawerName, lblDrawerUser;
     private Tools tools;
+    private Usuario mUsuario;
+    private ViewPager vp;
+
 
     // Tab titles
     String[] tabTitles = {"Tab1", "Tab2", "Tab3"};
@@ -83,12 +90,23 @@ public class menuPrincipal extends AppCompatActivity implements NavigationView.O
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mUsuario = tools.getDatosUsuario(tools.getStringPreferences("user"));
+
         View header = navigationView.getHeaderView(0);
         lblDrawerName = (TextView) header.findViewById(R.id.lblDrawerName);
         lblDrawerUser = (TextView) header.findViewById(R.id.lblDrawerUser);
+        imageUser = (ImageView) header.findViewById(R.id.imageUser);
 
-        lblDrawerName.setText("Fernando De la Rocha");
-        lblDrawerUser.setText(tools.getStringPreferences("user"));
+
+            byte[] byteImage = null;
+            byteImage = Base64.decode(mUsuario.getImgString(), Base64.DEFAULT);
+            Bitmap decodedImage = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
+            imageUser.setImageBitmap(decodedImage);
+
+        lblDrawerName.setText(mUsuario.getNombre());
+        lblDrawerUser.setText(mUsuario.getUsuario());
+
+
 
 
         Window wd = this.getWindow();

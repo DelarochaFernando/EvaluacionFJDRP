@@ -321,7 +321,8 @@ public class Formulario extends ActionBarActivity {
             return Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),m,true);
 
         }catch(IOException e){
-            Log.e("", "-- Error in setting image");
+           String msg = e.getMessage();
+            Log.e(msg, "-- Error in setting image");
         }catch (OutOfMemoryError oom){
             Log.e("", "-- OOM Error in setting image");
         }

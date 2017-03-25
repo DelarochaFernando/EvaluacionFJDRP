@@ -29,11 +29,14 @@ public class DBAdapter {
 
     private final Context context;
     private DataBaseHelper DbHelper;
+    private Usuario user;
     private SQLiteDatabase db;
 
     public DBAdapter(Context ctx){
         context = ctx;
         DbHelper = new DataBaseHelper(ctx);
+        user = null;
+
     }
 
     private static class DataBaseHelper extends SQLiteOpenHelper{
@@ -153,5 +156,42 @@ public class DBAdapter {
         }
         return psw;
 
+    }
+
+    public Usuario getDatosUser(String usr){
+
+        String nombre = "";
+        String usuario = "";
+        String img = "";
+        String email = "";
+        String password = "";
+
+        try{
+            Cursor c = null;
+            int count = 0;
+            openToRead();
+            c = db.rawQuery("SELECT nombre, usuario, imgString, email, password FROM "+TABLE_USUARIOS+" WHERE usuario ='"+usr+"' ",null);
+            if(c!=null){
+                count = c.getCount();
+                if(count>0){
+                    if(c.moveToFirst()){
+                        nombre = c.getString(0);
+                        usuario = c.getString(1);
+                        img = c.getString(2);
+                        email = c.getString(3);
+                        password = c. getString(4);
+
+                        user = new Usuario(nombre,usuario,img,email,password);
+                    }
+                }else {
+                    return user;
+                }
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return user;
+        }
+        return user;
     }
 }
