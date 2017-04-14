@@ -1,32 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <item android:title="Prospectos">
-            <menu>
-                <item
-                    android:id="@+id/nav_consulta_prospectos"
-                    android:title="Consulta de casos vigentes"/>
-                    <!--android:icon="@drawable/ic_action_device_dvr"-->
-            </menu>
-        </item>
-    </group>
-
-    <item android:title="Créditos">
+    <item android:title="Productos">
         <menu>
             <item
-                android:id="@+id/nav_consulta_creditos"
-                android:title="Prospecto de Crédito"/>
-                <!--android:icon="@drawable/ic_action_action_assignment"-->
+                android:id="@+id/nav_invitaciones"
+                android:title="Invitaciones"/>
 
-            <item
-                android:id="@+id/nav_seguimiento_credito"
-                android:title="Seguimiento de Crédito"/>
-                <!--android:icon="@drawable/ic_action_action_find_in_page"-->
+            <item android:id="@+id/nav_volantes"
+                android:title="Menús, Lonas y Volantes"/>
 
+            <item android:id="@+id/nav_playeras"
+                android:title="Playeras, Tazas y Gorras"/>
+            <!--android:icon="@drawable/ic_action_action_input"-->
         </menu>
     </item>
-
-    <item android:title="Usuario">
+    <item android:title="Admón. de Cuentas">
         <menu>
             <item
                 android:id="@+id/nav_cerrar_sesion"

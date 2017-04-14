@@ -105,6 +105,8 @@ public class Formulario extends ActionBarActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             wd.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
         }
+
+        /*
         editNombre.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -175,7 +177,7 @@ public class Formulario extends ActionBarActivity {
                     }
                 }
             }
-        });
+        });*/
 
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,9 +250,10 @@ public class Formulario extends ActionBarActivity {
             Uri imgUri = data.getData();
             try {
                     fotoElegida = 2;
-                 bm = imageFromGallery(imgUri);
-                bmToSave = bm;
-                profile_image.setImageBitmap(bm);
+                byte[] imgbytes = imageFromGallery(imgUri);
+                //String cadenaImg = Base64.encodeToString(imgbytes,Base64.DEFAULT);
+                bmToSave = BitmapFactory.decodeByteArray(imgbytes,0,imgbytes.length);
+                profile_image.setImageBitmap(bmToSave);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -275,20 +278,22 @@ public class Formulario extends ActionBarActivity {
         return orientation;
     }
 
-    private Bitmap imageFromGallery(Uri uri){
+    private byte[] imageFromGallery(Uri uri){
         boolean landscape = false;
         boolean portrait = false;
+        Bitmap bitResult = null;
+        byte[] imagen = null;
         try{
             Bitmap bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG,100,stream);
+            bm.compress(Bitmap.CompressFormat.JPEG,80,stream);
             byte[] byteArray = stream.toByteArray();
-            FileInputStream inputStream = new FileInputStream(uri.getPath());
-            ExifInterface exif = new ExifInterface(uri.getPath());
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
+            //FileInputStream inputStream = new FileInputStream(uri.getPath());
+            //ExifInterface exif = new ExifInterface(uri.getPath());
+            //int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,ExifInterface.ORIENTATION_NORMAL);
             /*if(orientation<=0){
                 orientation
-            }*/
+            }
             int angle = 0;
             switch(orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_270:
@@ -316,9 +321,11 @@ public class Formulario extends ActionBarActivity {
                 m.postRotate(270);
             }else if(angle == 0 && portrait) {
                 m.postRotate(angle);
-            }
+            }*/
 
-            return Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),m,true);
+            imagen = byteArray;
+            //bitResult = bm;
+            //Bitmap.createBitmap(bm,0,0,bm.getWidth(),bm.getHeight(),m,true);
 
         }catch(IOException e){
            String msg = e.getMessage();
@@ -326,7 +333,7 @@ public class Formulario extends ActionBarActivity {
         }catch (OutOfMemoryError oom){
             Log.e("", "-- OOM Error in setting image");
         }
-        return null;
+        return imagen;
     }
 
     @Override
@@ -340,19 +347,10 @@ public class Formulario extends ActionBarActivity {
                 return true;
             case R.id.btnSave:
                 info = checkInfo();
-                Snackbar snackbar = Snackbar.make(coordinatorLayout,mensaje,Snackbar.LENGTH_LONG)
-                        .setAction("ACEPTAR", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(mensaje.contains("Error")){
-                            return;
-                        }else{
-                            Intent intent = new Intent(Formulario.this,myLogin.class);
-                            startActivity(intent);
-                        }
-                    }
-                });
+                Snackbar snackbar = Snackbar.make(coordinatorLayout,mensaje,Snackbar.LENGTH_LONG);
                 snackbar.show();
+                Intent savedUser = new Intent(Formulario.this,myLogin.class);
+                startActivity(savedUser);
                 //Toast.makeText(Formulario.this, mensaje, Toast.LENGTH_SHORT).show();
                 return info;
             default:

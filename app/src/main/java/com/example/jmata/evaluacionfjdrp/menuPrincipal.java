@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 import com.example.jmata.evaluacionfjdrp.adapter.TabsPagerAdapter;
@@ -54,7 +55,8 @@ public class menuPrincipal extends AppCompatActivity implements NavigationView.O
 
     private android.app.ActionBar ab;
     private DBAdapter db;
-    private ImageView imageUser;
+    private CircleImageView imageUser;
+    //private ImageView imageUser;
     private String img_str;
     private TabsPagerAdapter tabsAdapter;
     private TextView lblDrawerName, lblDrawerUser;
@@ -82,6 +84,8 @@ public class menuPrincipal extends AppCompatActivity implements NavigationView.O
         getSupportActionBar().setTitle("Home");
         getSupportActionBar().setElevation(0);
 
+
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, dwl, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         dwl.setDrawerListener(toggle);
@@ -95,13 +99,18 @@ public class menuPrincipal extends AppCompatActivity implements NavigationView.O
         View header = navigationView.getHeaderView(0);
         lblDrawerName = (TextView) header.findViewById(R.id.lblDrawerName);
         lblDrawerUser = (TextView) header.findViewById(R.id.lblDrawerUser);
-        imageUser = (ImageView) header.findViewById(R.id.imageUser);
+        imageUser = (CircleImageView) header.findViewById(R.id.imageUser);
 
 
-            byte[] byteImage = null;
-            byteImage = Base64.decode(mUsuario.getImgString(), Base64.DEFAULT);
+        if(mUsuario.getImgString()!=null){
+            String data = mUsuario.getImgString();
+            byte[] byteImage = Base64.decode(data,Base64.DEFAULT);
             Bitmap decodedImage = BitmapFactory.decodeByteArray(byteImage, 0, byteImage.length);
-            imageUser.setImageBitmap(decodedImage);
+            Bitmap scalatedImage = Bitmap.createScaledBitmap(decodedImage,500,350,true);
+            imageUser.setImageBitmap(scalatedImage);
+        }else{
+            imageUser.setImageResource(R.drawable.user);
+        }
 
         lblDrawerName.setText(mUsuario.getNombre());
         lblDrawerUser.setText(mUsuario.getUsuario());

@@ -81,9 +81,9 @@ public class myLogin extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                validaCredenciales();
-                //Intent intent = new Intent(myLogin.this, menuPrincipal.class);
-                //startActivity(intent);
+                //validaCredenciales();
+                Intent intent = new Intent(myLogin.this, menuPrincipal.class);
+                startActivity(intent);
 
             }
         });

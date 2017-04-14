@@ -65,5 +65,6 @@ public class Usuario {
         this.usuario = usuario;
         this.email = email;
         this.password = password;
+        this.imgString = imgString;
     }
 }
